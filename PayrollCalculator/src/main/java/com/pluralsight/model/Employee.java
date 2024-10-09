@@ -75,7 +75,21 @@ public class Employee {
     }
 
 
+    /**
+     *
+     * @return gross pay
+     */
+
+    public double getGrossPay() {
+        double grossPay = getHoursOfWorked() * getPayRate();
+        System.out.println("Id: " + getEmployeeId() + " | " + getName() + " gross pay is "  + grossPay);
+        return grossPay;
+
+    }
+
+
     public void displayGrossPay() {
-        System.out.println("Id: " + getEmployeeId() + " | " + getName() + " gross pay is "  + getHoursOfWorked() * getPayRate());
+        double grossPay = getHoursOfWorked() * getPayRate();
+        System.out.println("Id: " + getEmployeeId() + " | " + getName() + " gross pay is "  + grossPay);
     }
 }
