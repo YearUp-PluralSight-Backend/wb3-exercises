@@ -14,7 +14,6 @@ public class Main {
     static final String FILENAME = "logs.txt";
     static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.US).withZone(ZoneOffset.UTC);
     public static void main(String[] args) {
-
         homeScreen();
     }
 
@@ -25,6 +24,7 @@ public class Main {
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(FILENAME, true));
             bufferedWriter.write(LocalDateTime.now().format(dateTimeFormatter) + " search: ");
+
             printMenu();
             boolean flag = true;
             while (flag) {

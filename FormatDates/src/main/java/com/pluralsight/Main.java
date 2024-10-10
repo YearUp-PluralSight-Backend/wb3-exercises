@@ -33,8 +33,8 @@ public class Main {
         System.out.println("Now: " + formatDateThree);
 
 //                            "EEEE, MM d, yyyy hh:mm"
-        String dateTimeFour = "Sunday, Sep 5, 2021 10:02";
-        DateTimeFormatter dateTimeFormatterFour = DateTimeFormatter.ofPattern("EEEE, MMM d, yyyy hh:mm");
+        String dateTimeFour = "Sunday, Sep 5, 2021 10:02PM";
+        DateTimeFormatter dateTimeFormatterFour = DateTimeFormatter.ofPattern("EEEE, MMM d, yyyy hh:mma");
         LocalDateTime localDateFour = LocalDateTime.parse(dateTimeFour, dateTimeFormatterFour);
         String forwardSlashFormatDateFour = localDateFour.format(dateTimeFormatterFour);
         System.out.println("Now: " + forwardSlashFormatDateFour);
