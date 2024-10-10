@@ -5,6 +5,7 @@ import com.pluralsight.util.InputUtil;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * read the files and display the data
@@ -36,10 +37,14 @@ public class StoreApp {
                     case 2 -> loopUpById();
                     case 3 -> lookUpByPriceRange();
                     case 4 -> addNewProduct();
-                    case 5 -> flag = false;
+                    case 5 -> deleteProductById();
+                    case 6 -> updateProductById();
+                    case 7 -> {
+                        flag = false;
+                        System.out.println("Thank you for using our application! have a great day.");
+                    }
                     default -> System.out.println("Invalid option! Please try it again.");
                 }
-
                 format();
             }
         } catch (Exception e) {
@@ -48,16 +53,20 @@ public class StoreApp {
 
     }
 
+
     /**
      * print the menu option
      */
     private static void PrintMenu() {
         String info =
                 """
-                D   - Display the products              (D   = Display)
-                LId - Look up product by id             (LId = look id)
-                LPR - Look up product by price range    (LR  = look price range)
-                A   - Add new product                   (A   = add)
+                1 - Display the products
+                2 - Look up product by id
+                3 - Look up product by price range
+                4 - Add new product
+                5 - Delete product By Id
+                6 - Update product by Id
+                7 - Exit
                 """;
         System.out.println(info);
     }
@@ -67,6 +76,7 @@ public class StoreApp {
      */
     private static void lookUpByPriceRange() {
 
+        List<Product> productList = new ArrayList<>();
         double startPrice = InputUtil.promptForDouble("Enter your start price : ");
         double endPrice = InputUtil.promptForDouble("Enter your end price : ");
 
@@ -74,9 +84,11 @@ public class StoreApp {
 
             if (product.getPrice() >= startPrice && product.getPrice() < endPrice) {
 
-                System.out.println(product.toString());
+                productList.add(product);
             }
         }
+
+        dislpayProducts(productList);
     }
 
     /**
@@ -94,8 +106,9 @@ public class StoreApp {
         for (Product product : inventory) {
 
             if (product.getId() == id) {
-
                 System.out.println(product.toString());
+            } else {
+                System.out.println("Not found!");
             }
         }
     }
@@ -104,6 +117,51 @@ public class StoreApp {
      * add new product and then write the product into csv
      */
     private static void addNewProduct() {
+
+        Object[] productData =  productDataInput();
+        int id = (Integer) productData[0];
+        String name = (String) productData[1];
+        double price = (Double) productData[2];
+        Product product = new Product(id, name, price);
+        inventory.add(product);
+        boolean writable = writeProductToCSV(product, true);
+
+        if (writable) {
+            System.out.println("You have successfully write the product into the inventory.csv");
+        } else {
+            System.out.println("You failed to write the product to inventory.csv");
+        }
+        System.out.println("You have successfully added new product: " + product.toString());
+    }
+
+    /**
+     * update the product information by id
+     */
+    private static void updateProductById() {
+
+        int id = InputUtil.promptForInteger("Enter the product id: ");
+        for (Product product: inventory) {
+
+            if (product.getId() == id) {
+
+                Object[] productData =  productDataInput();
+                int newId = (Integer) productData[0];
+                String newName = (String) productData[1];
+                double newPrice = (Double) productData[2];
+
+                product.setId(newId);
+                product.setName(newName);
+                product.setPrice(newPrice);
+
+            }
+        }
+    }
+
+    /**
+     *  ask user to input the product information, id name, price
+     * @return id, name, price
+     */
+    private static Object[] productDataInput() {
         int id = InputUtil.promptForInteger("Enter product id: ");
 
         boolean valid = checkId(id);
@@ -115,17 +173,7 @@ public class StoreApp {
 
         String name = InputUtil.promptForString("Enter product name: ");
         double price = InputUtil.promptForDouble("Enter the product price: ");
-        Product product = new Product(id, name, price);
-        inventory.add(product);
-
-        boolean writable = writeProductToCSV(product);
-
-        if (writable) {
-            System.out.println("You have successfully write the product into the inventory.csv");
-        } else {
-            System.out.println("You failed to write the product to inventory.csv");
-        }
-        System.out.println("You have successfully added new product: " + product.toString());
+        return  new Object[] {id, name, price};
     }
 
     /**
@@ -134,8 +182,9 @@ public class StoreApp {
      * @param product new product
      * @return true or false depends on whether it write successful or not.
      */
-    private static boolean writeProductToCSV(Product product) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("inventory.csv", true))) {
+    private static boolean writeProductToCSV(Product product, boolean overWrite) {
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("inventory.csv", overWrite))) {
             String line = "\n" + product.getId() + "|" + product.getName() + "|" + product.getPrice();
             bufferedWriter.write(line);
             bufferedWriter.flush();
@@ -162,10 +211,31 @@ public class StoreApp {
     }
 
     /**
+     * delete the product by product id
+     * @return true if it found by id and deleted.
+     */
+    private static boolean deleteProductById() {
+        int id = InputUtil.promptForInteger("Enter the product id: ");
+
+            for (Product product: inventory) {
+
+                if (product.getId() == id) {
+                    inventory.remove(product);
+                } else {
+                    System.out.println("Not found!");
+                }
+                writeProductToCSV(product, true);
+            }
+
+        return true;
+
+    }
+
+    /**
      * start point of the program!
      * get the inventory and loop it to display them.
      */
-    public static void dislpayProducts(ArrayList<Product> inventory) {
+    public static void dislpayProducts(List<Product> inventory) {
         try {
             System.out.println("We carry the following inventory: ");
 
