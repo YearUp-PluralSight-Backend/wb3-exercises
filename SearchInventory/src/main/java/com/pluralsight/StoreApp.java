@@ -3,11 +3,9 @@ package com.pluralsight;
 import com.pluralsight.model.Product;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class StoreApp {
 
@@ -18,7 +16,10 @@ public class StoreApp {
 
     }
 
-
+    /**
+     * start point of the program!
+     * get the inventory and loop it to display them.
+     */
     public static void homeScreen() {
 
         ArrayList<Product> inventory = getInventory();
@@ -35,10 +36,19 @@ public class StoreApp {
         }
 
     }
-    public static ArrayList<Product> getInventory() {
-        ArrayList<Product> inventory = new ArrayList<Product>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(FILENAME))) {
 
+    /**
+     *  read the file inventory.csv
+     *  get the content and split them by |.
+     *  create a {@code Product} to store the data
+     *  add the {@code Product} to the inventory list
+     * @return
+     */
+    public static ArrayList<Product> getInventory() {
+        ArrayList<Product> inventory = new ArrayList<>(); // create a list to store the products
+
+        // read the file and add the content to the inventory list.  (try-catch resource release)
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(FILENAME))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
 
