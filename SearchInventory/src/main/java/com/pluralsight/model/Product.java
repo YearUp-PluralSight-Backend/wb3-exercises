@@ -1,5 +1,10 @@
 package com.pluralsight.model;
 
+/**
+ * The {@code Product} represents a Product in the {@code StoreApp}
+ * It comes with three properties.
+ * It provides constructors, getters, setters.
+ */
 public class Product {
 
     private int id;

@@ -7,6 +7,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ *  read the files and display the data
+ *  one static variable and three static methods.
+ */
 public class StoreApp {
 
     final static String FILENAME = "inventory.csv";
